@@ -204,7 +204,7 @@ These ggpairs plots are extremely useful. They reveal the three variables with t
 ```{r echo=FALSE, warning=FALSE, Bivariate_Plots2}
 # generate scatter plots of quality vs input variables
 ggplot(aes(x = alcohol, y = quality), data = reds) +
-  geom_point() +
+  geom_jitter(alpha = 0.5) +
   scale_x_continuous(limits = c(8, 14))
 ```
 
@@ -242,7 +242,7 @@ These two plots show the positive relationship between the two sets of highly co
 # use quality as a factor on the x axis for box plots
 # alcohol
 p3 <- ggplot(aes(x = alcohol, y = quality), data = reds) +
-  geom_point(alpha = 0.5) +
+  geom_jitter(alpha = 0.5) +
   geom_smooth(method = "lm", color = "red") +
   scale_x_continuous(limits = c(8, 14)) +
   annotate("text", x = 13, y = 3.5, label = "Corr: 0.476")
@@ -253,29 +253,29 @@ p4 <- ggplot(aes(x = factor(quality), y = alcohol), data = reds) +
 grid.arrange(p3, p4, ncol = 2)
 # volatile.acidity
 p5 <- ggplot(aes(x = volatile.acidity, y = quality), data = reds) +
-  geom_point() +
+  geom_jitter(alpha = 0.5) +
   geom_smooth(method = "lm", color = "red") +
-  scale_x_continuous(limits = c(0.2, 1.2)) +
+  scale_x_continuous(limits = c(0.2, 1.1)) +
   annotate("text", x = 1, y = 7.5, label = "Corr: -0.379")
 p6 <- ggplot(aes(x = factor(quality), y = volatile.acidity), data = reds) +
   geom_boxplot() +
-  scale_y_continuous(limits = c(0.2, 1.2)) +
+  scale_y_continuous(limits = c(0.2, 1.1)) +
   xlab("quality")
 grid.arrange(p5, p6, ncol = 2)
 # sulphates
 p7 <- ggplot(aes(x = sulphates, y = quality), data = reds) +
-  geom_point() +
+  geom_jitter(alpha = 0.5) +
   geom_smooth(method = "lm", color = "red") +
-  scale_x_continuous(limits = c(0.3, 1.3)) +
-  annotate("text", x = 1.125, y = 3.5, label = "Corr: 0.251")
+  scale_x_continuous(limits = c(0.3, 1.1)) +
+  annotate("text", x = 0.9, y = 3.5, label = "Corr: 0.251")
 p8 <- ggplot(aes(x = factor(quality), y = sulphates), data = reds) +
   geom_boxplot() +
-  scale_y_continuous(limits = c(0.3, 1.3)) + 
+  scale_y_continuous(limits = c(0.3, 1.1)) + 
   xlab("quality")
 grid.arrange(p7, p8, ncol = 2)
 ```
 
-These pairs of scatter and box plots vs. quality for alcohol (corr.: 0.476), volatile.acidity (-0.379), and sulphates (0.251) all demonstrate the relationships indicated by the correlation values. The scatter plots help to visualize the correlations, and the trend line provides a clear indication of the direction. The box plots essentially treat the integer values of quality as factors or discrete variables, and they make it easier to see the relative positions of the summary statistics associated with each quality value.
+These pairs of scatter and box plots vs. quality for alcohol (corr.: 0.476), volatile.acidity (-0.379), and sulphates (0.251) all demonstrate the relationships indicated by the correlation values. The scatter plots help to visualize the correlations, and the trend line provides a clear indication of the direction. The box plots essentially treat the integer values of quality as factors or discrete variables, and they make it easier to see the relative positions of the summary statistics associated with each quality value. Note that both pairs of plots have the same limits for the axes associated with each variable.
 
 
 ## Bivariate Analysis
@@ -293,16 +293,16 @@ Quality has a positive correlation with alcohol at 0.476.
 
 ## Multivariate Plots Section
 
-```{r echo=FALSE, warning=FALSE, fig.width = 8, Multivariate_Plots}
+```{r echo=FALSE, warning=FALSE, fig.width = 8, fig.height = 8, Multivariate_Plots}
 # first try with sulphates
 ggplot(aes(x = alcohol, y = quality, color = sulphates), data = reds) +
-  geom_point() +
+  geom_jitter() +
   scale_x_continuous(limits = c(8, 14)) +
   scale_color_gradient2(limits = c(0.3, 1.2))
 
 # try custom scales and views to better show variations
 ggplot(aes(x = alcohol, y = quality, color = sulphates), data = reds) +
-  geom_point(size = 3) +
+  geom_jitter(size = 3) +
   scale_x_continuous(limits = c(8, 14)) +
   scale_color_gradient2(low="blue", mid="gray", high="red",
                         midpoint = median(reds$sulphates),
@@ -310,18 +310,18 @@ ggplot(aes(x = alcohol, y = quality, color = sulphates), data = reds) +
 
 # now try volatile.acidity (negative correlation)
 ggplot(aes(x = alcohol, y = quality), data = reds) +
-  geom_point(aes(color = volatile.acidity)) +
+  geom_jitter(aes(color = volatile.acidity)) +
   scale_x_continuous(limits = c(8, 14)) +
   scale_color_gradient2(limits = c(0, 1.1))
 ggplot(aes(x = alcohol, y = quality), data = reds) +
-  geom_point(aes(color = volatile.acidity), size = 3) +
+  geom_jitter(aes(color = volatile.acidity), size = 3) +
   scale_x_continuous(limits = c(8, 14)) +
   scale_color_gradient2(low="blue", mid="gray", high="red",
                         midpoint = median(reds$volatile.acidity),
                         limits = c(0, 1.1))
 ```
 
-These plots show the iterations of approaches I used to help reveal the relationship of the third variable in plots of quality vs. alcohol. I selected alcohol for the x-axis because it had the strongest correlation with quality. These plots show the positive correlation between quality and alcohol while simultaneously showing the relatively weak correlations with sulphates (positive) and volatile.acidity (negative).
+These plots show the iterations of approaches I used to help reveal the relationship of the third variable in plots of quality vs. alcohol. I selected alcohol for the x-axis because it had the strongest correlation with quality. These plots show the positive correlation between quality and alcohol while simultaneously showing the relatively weak correlations with sulphates (positive) and volatile.acidity (negative). Jitter was applied in the vertical dimension to avoid overplotting driven by the discrete nature of the quality variable.
 
 ```{r echo=FALSE, warning=FALSE, fig.width = 8, fig.height = 8, Multivariate_Plots2}
 # now try with quality as color
